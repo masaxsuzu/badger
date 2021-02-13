@@ -1,0 +1,23 @@
+
+CHIP Id16 {
+    IN a[16];
+    OUT out[16];
+
+    PARTS:
+    And(a=a[0],b=a[0],out=out[0]);
+    And(a=a[1],b=a[1],out=out[1]);
+    And(a=a[2],b=a[2],out=out[2]);
+    And(a=a[3],b=a[3],out=out[3]);
+    And(a=a[4],b=a[4],out=out[4]);
+    And(a=a[5],b=a[5],out=out[5]);
+    And(a=a[6],b=a[6],out=out[6]);
+    And(a=a[7],b=a[7],out=out[7]);
+    And(a=a[8],b=a[8],out=out[8]);
+    And(a=a[9],b=a[9],out=out[9]);
+    And(a=a[10],b=a[10],out=out[10]);
+    And(a=a[11],b=a[11],out=out[11]);
+    And(a=a[12],b=a[12],out=out[12]);
+    And(a=a[13],b=a[13],out=out[13]);
+    And(a=a[14],b=a[14],out=out[14]);
+    And(a=a[15],b=a[15],out=out[15]);
+}

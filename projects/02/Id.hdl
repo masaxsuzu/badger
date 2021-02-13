@@ -1,0 +1,8 @@
+
+CHIP Id {
+    IN a;
+    OUT out;
+
+    PARTS:
+    And(a=a,b=a,out=out);
+}

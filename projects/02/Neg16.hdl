@@ -1,0 +1,40 @@
+
+CHIP Neg16 {
+    IN a[16],n;
+    OUT out[16];
+
+    PARTS:
+    Not(in=a[0],out=out0);
+    Not(in=a[1],out=out1);
+    Not(in=a[2],out=out2);
+    Not(in=a[3],out=out3);
+    Not(in=a[4],out=out4);
+    Not(in=a[5],out=out5);
+    Not(in=a[6],out=out6);
+    Not(in=a[7],out=out7);
+    Not(in=a[8],out=out8);
+    Not(in=a[9],out=out9);
+    Not(in=a[10],out=out10);
+    Not(in=a[11],out=out11);
+    Not(in=a[12],out=out12);
+    Not(in=a[13],out=out13);
+    Not(in=a[14],out=out14);
+    Not(in=a[15],out=out15);
+
+    Mux(a=a[0],b=out0,sel=n,out=out[0]);
+    Mux(a=a[1],b=out1,sel=n,out=out[1]);
+    Mux(a=a[2],b=out2,sel=n,out=out[2]);
+    Mux(a=a[3],b=out3,sel=n,out=out[3]);
+    Mux(a=a[4],b=out4,sel=n,out=out[4]);
+    Mux(a=a[5],b=out5,sel=n,out=out[5]);
+    Mux(a=a[6],b=out6,sel=n,out=out[6]);
+    Mux(a=a[7],b=out7,sel=n,out=out[7]);
+    Mux(a=a[8],b=out8,sel=n,out=out[8]);
+    Mux(a=a[9],b=out9,sel=n,out=out[9]);
+    Mux(a=a[10],b=out10,sel=n,out=out[10]);
+    Mux(a=a[11],b=out11,sel=n,out=out[11]);
+    Mux(a=a[12],b=out12,sel=n,out=out[12]);
+    Mux(a=a[13],b=out13,sel=n,out=out[13]);
+    Mux(a=a[14],b=out14,sel=n,out=out[14]);
+    Mux(a=a[15],b=out15,sel=n,out=out[15]);
+}

@@ -1,0 +1,30 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/One16.hdl
+
+CHIP One16 {
+    IN a;
+    OUT out[16];
+
+    PARTS:
+    Not(in=a,out=na);
+    Or(a=a,b=a,out=one);
+    And(a=a,b=na,out=zero);
+    Or(a=one,b=one,out=out[0]);
+    Or(a=zero,b=zero,out=out[1]);
+    Or(a=zero,b=zero,out=out[2]);
+    Or(a=zero,b=zero,out=out[3]);
+    Or(a=zero,b=zero,out=out[4]);
+    Or(a=zero,b=zero,out=out[5]);
+    Or(a=zero,b=zero,out=out[6]);
+    Or(a=zero,b=zero,out=out[7]);
+    Or(a=zero,b=zero,out=out[8]);
+    Or(a=zero,b=zero,out=out[9]);
+    Or(a=zero,b=zero,out=out[10]);
+    Or(a=zero,b=zero,out=out[11]);
+    Or(a=zero,b=zero,out=out[12]);
+    Or(a=zero,b=zero,out=out[13]);
+    Or(a=zero,b=zero,out=out[14]);
+    Or(a=zero,b=zero,out=out[15]);
+}

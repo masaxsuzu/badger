@@ -1,0 +1,6 @@
+CHIP Ng {
+    IN a[16];
+    OUT ng;
+    PARTS:
+    Id(a=a[15],out=ng);
+}

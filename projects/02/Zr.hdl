@@ -1,0 +1,24 @@
+CHIP Zr {
+    IN a[16];
+    OUT zr;
+    PARTS:
+    Or(a=a[0],b=a[1],out=zr1);
+    Or(a=a[2],b=a[3],out=zr2);
+    Or(a=a[4],b=a[5],out=zr3);
+    Or(a=a[6],b=a[7],out=zr4);
+    Or(a=a[8],b=a[9],out=zr5);
+    Or(a=a[10],b=a[11],out=zr6);
+    Or(a=a[12],b=a[13],out=zr7);
+    Or(a=a[14],b=a[15],out=zr8);
+
+    Or(a=zr1,b=zr2,out=zr12);
+    Or(a=zr3,b=zr4,out=zr34);
+    Or(a=zr5,b=zr6,out=zr56);
+    Or(a=zr7,b=zr8,out=zr78);
+
+    Or(a=zr12,b=zr34,out=zr1234);
+    Or(a=zr56,b=zr78,out=zr5678);
+
+    Or(a=zr1234,b=zr5678,out=zr12345678);
+    Not(in=zr12345678,out=zr);
+}
