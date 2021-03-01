@@ -1,2 +1,5 @@
 tools
 *.out
+*.hack
+[Bb]in
+[Oo]bj
