@@ -11,9 +11,9 @@ namespace Netsoft.Badger.Compiler.Backend
                 Console.Error.WriteLine("No source code is provided!");
                 return 1;
             }
-
+            var name = System.IO.Path.GetFileNameWithoutExtension(args[0]);
             var lines = System.IO.File.ReadAllLines(args[0]);
-            var sm = new StackMachine(Console.Out);
+            var sm = new StackMachine(name, Console.Out);
             foreach (var line in lines)
             {
                 var command = ParseCommand(line);
@@ -39,13 +39,8 @@ namespace Netsoft.Badger.Compiler.Backend
                     throw new Exception($"got {chars[i+1]}, want /");
                 }
 
-                string c = line.Length switch
-                {
-                    2 => new string(line.AsSpan(i,2).ToArray()),
-                    3 => new string(line.AsSpan(i,3).ToArray()),
-                    _ => new string(line.AsSpan(i,4).ToArray()),
-                };
-                switch (c)
+                string[] c = line.Split(' ',StringSplitOptions.RemoveEmptyEntries);
+                switch (c[0])
                 {
                     case "eq":
                         return new EqualCommand();
@@ -62,15 +57,9 @@ namespace Netsoft.Badger.Compiler.Backend
                     case "or":
                         return new OrCommand();
                     case "pop":
-                        string[] rest = new string(line.AsSpan(i+4,line.Length - i - 4).ToArray()).Split(' ');
-                        string a = rest[0];
-                        int b = int.Parse(rest[1]);
-                        return new PopCommand(a, b);
+                        return new PopCommand(c[1], int.Parse(c[2]));
                     case "push":
-                        string[] rest1 = new string(line.AsSpan(i+5,line.Length - i - 5).ToArray()).Split(' ');
-                        string a1 = rest1[0];
-                        int b1 = int.Parse(rest1[1]);
-                        return new PushCommand(a1, b1);
+                        return new PushCommand(c[1], int.Parse(c[2]));
                     case "add":
                         return new AddCommand();
                     case "sub":
@@ -167,6 +156,7 @@ namespace Netsoft.Badger.Compiler.Backend
                 Arg2 = arg2;
             }
             public  void Generate(StackMachine machine) {
+                machine.Pop(this);
             }
         }
         public class AddCommand: ICommand {
@@ -183,241 +173,189 @@ namespace Netsoft.Badger.Compiler.Backend
         }
 
         public class StackMachine {
+            private string _name;
             private System.IO.TextWriter _file;
             public int RegisterId{ get; set;}
             public int SP{ get; set;}
             public int Label{ get; set;}
-            public StackMachine(System.IO.TextWriter file) {
+            public StackMachine(string name, System.IO.TextWriter file) {
                 RegisterId = 0;
-                _file = file;
                 Label = 0;
+                _file = file;
+                _name = name;
             }
             public void Eq(EqualCommand command) {
-                var l = Label++;
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=D-M");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                
-                _file.WriteLine($"// Push a == b");
-                
-                _file.WriteLine($"@EQ{l}");
-                _file.WriteLine($"D;JEQ");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=0");    // a != b
-                _file.WriteLine($"@EQ_END{l}");
-                _file.WriteLine($"0;JMP");
-                _file.WriteLine($"(EQ{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=-1");   // a == b
-                _file.WriteLine($"(EQ_END{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                var l1 = Label++;
+                var l2 = Label++;
+                Compare("JEQ", l1, l2);
             }
             public void Lt(LessThanCommand command) {
-                var l = Label++;
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M-D");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                
-                _file.WriteLine($"// Push a < b");
-                
-                _file.WriteLine($"@LT{l}");
-                _file.WriteLine($"D;JLT");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=0");    // a >= b
-                _file.WriteLine($"@LT_END{l}");
-                _file.WriteLine($"0;JMP");
-                _file.WriteLine($"(LT{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=-1");   // a < b
-                _file.WriteLine($"(LT_END{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                var l1 = Label++;
+                var l2 = Label++;
+                Compare("JLT", l1, l2);
             }
             public void Gt(GreaterThanCommand command) {
-                 var l = Label++;
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M-D");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                
-                _file.WriteLine($"// Push b > a");
-                
-                _file.WriteLine($"@GT{l}");
-                _file.WriteLine($"D;JGT");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=0");    // a <= b
-                _file.WriteLine($"@GT_END{l}");
-                _file.WriteLine($"0;JMP");
-                _file.WriteLine($"(GT{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=-1");   // a < b
-                _file.WriteLine($"(GT_END{l})");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                var l1 = Label++;
+                var l2 = Label++;
+                Compare("JGT", l1, l2);
             }
             public void Neg(NegativeCommand command) {
-                // Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=-M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// Push -a");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=D");    // -a
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                Unary("M=-M");
             }
             public void Not(NotCommand command) {
-                // Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=!M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-
-                _file.WriteLine($"// Push !a");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=D");    // !a
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                 Unary("M=!M");
+            }
+            public void Add(AddCommand command) {
+                Binary("D=M+D");
+            }
+            public void Sub(SubCommand command) {
+                Binary("D=M-D");
             }
             public void And(AndCommand command) {
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=D&M");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                
-                _file.WriteLine($"// Push a & b");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=D");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                 Binary("D=M&D");
             }
             public void Or(OrCommand command) {
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=D|M");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                
-                _file.WriteLine($"// Push a | b");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=D");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+                Binary("D=M|D");
             }
             public void Push(PushCommand command) {
                 if(command.Arg1 == "constant") {
-                    _file.WriteLine($"// Push {command.Arg2}");
+                    _file.WriteLine($"// Push constant {command.Arg2}");
                     _file.WriteLine($"@{command.Arg2}");
                     _file.WriteLine($"D=A");
-                    _file.WriteLine($"@SP");
+                    this.PushFromDRegister();
+                    return;
+                }
+                var segment = command.Arg1 switch {
+                    "local" => "LCL",
+                    "argument" => "ARG",
+                    "this" => "THIS",
+                    "that" => "THAT",
+                    _ => ""
+                };
+                if (!string.IsNullOrEmpty(segment)) {
+                    _file.WriteLine($"// Push argument {command.Arg2}");
+
+                    _file.WriteLine($"@{segment}");
                     _file.WriteLine($"A=M");
-                    _file.WriteLine($"M=D");
-                    _file.WriteLine($"@SP");
-                    _file.WriteLine($"M=M+1");
+                    for (int i = 0; i < command.Arg2; i++)
+                    {
+                        _file.WriteLine($"A=A+1");
+                    }
+                    _file.WriteLine($"D=M");
+                    this.PushFromDRegister();
+                    return;
+                }
+                var baseAddress = command.Arg1 switch {
+                    "temp" => "5",
+                    "pointer" => "3",
+                    _ => ""
+                };
+                if (!string.IsNullOrEmpty(baseAddress)) {
+                    _file.WriteLine($"@{baseAddress}");
+                    for (int i = 0; i < command.Arg2; i++)
+                    {
+                        _file.WriteLine($"A=A+1");
+                    }
+                    _file.WriteLine($"D=M");
+                    this.PushFromDRegister();
+                    return;
+                }
+                if (command.Arg1 == "static") {
+                    _file.WriteLine($"@{_name}.{command.Arg2}");
+                    _file.WriteLine($"D=M");
+                    this.PushFromDRegister();
                     return;
                 }
             }
-            public void Add(AddCommand command) {
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=D+M");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// Push a+b");
-                _file.WriteLine($"A=M");
-                _file.WriteLine($"M=D");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M+1");
+            public void Pop(PopCommand command) {
+                _file.WriteLine($"// Pop {command.Arg1} {command.Arg2}");
 
-                return;
+                var segment = command.Arg1 switch {
+                    "local" => "LCL",
+                    "argument" => "ARG",
+                    "this" => "THIS",
+                    "that" => "THAT",
+                    _ => ""
+                };
+                if (!string.IsNullOrEmpty(segment)) {
+                    this.PopToARegister();
+                    _file.WriteLine("D=M");
+                    _file.WriteLine($"@{segment}");
+                    _file.WriteLine($"A=M");
+                    for (int i = 0; i < command.Arg2; i++)
+                    {
+                        _file.WriteLine($"A=A+1");
+                    }
+                    _file.WriteLine($"M=D");
+                    return;
+                }
+
+                var baseAddress = command.Arg1 switch {
+                    "temp" => "5",
+                    "pointer" => "3",
+                    _ => ""
+                };
+                if (!string.IsNullOrEmpty(baseAddress)) {
+                    this.PopToARegister();
+                    _file.WriteLine($"D=M");
+                    _file.WriteLine($"@{baseAddress}");
+                    for (int i = 0; i < command.Arg2; i++)
+                    {
+                        _file.WriteLine($"A=A+1");
+                    }
+                    _file.WriteLine($"M=D");
+                    return;
+                }
+
+                if (command.Arg1 == "static") {
+                    this.PopToARegister();
+                    _file.WriteLine($"D=M");
+                    _file.WriteLine($"@{_name}.{command.Arg2}");
+                    _file.WriteLine($"M=D");
+                    return;
+                }
+                Debugger.WriteLine($"\"{command.Arg1}\"");
             }
-            public void Sub(SubCommand command) {
-                // Pop and Pop and Push
-                _file.WriteLine($"// POP left");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
+
+            private void Compare(string cond, int l1, int l2) {
+                this.PopToARegister();
                 _file.WriteLine($"D=M");
+                this.PopToARegister();
+                _file.WriteLine($"D=M-D");
+                _file.WriteLine($"@LABEL{l1}");
+                _file.WriteLine($"D;{cond}");
+                _file.WriteLine($"D=0");
+                _file.WriteLine($"@LABEL{l2}");
+                _file.WriteLine($"0;JMP");
+                _file.WriteLine($"(LABEL{l1})");
+                _file.WriteLine($"D=-1");
+                _file.WriteLine($"(LABEL{l2})");
+                this.PushFromDRegister();
+            }
+            
+            private void Unary(string op) {
+                _file.WriteLine("@SP");
+                _file.WriteLine("A=M-1");
+                _file.WriteLine($"{op}");
+            }
+            private void Binary(string op) {
+                this.PopToARegister();
+                _file.WriteLine("D=M");
+                this.PopToARegister();
+                _file.WriteLine($"{op}");
+                this.PushFromDRegister();
+            }
+            private void PushFromDRegister() {
                 _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// POP right");
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"A=M-1");
-                _file.WriteLine($"D=M-D");                
-                _file.WriteLine($"@SP");
-                _file.WriteLine($"M=M-1");
-                _file.WriteLine($"// Push a+b");
                 _file.WriteLine($"A=M");
                 _file.WriteLine($"M=D");
                 _file.WriteLine($"@SP");
                 _file.WriteLine($"M=M+1");
+            }
+            private void PopToARegister() {
+                _file.WriteLine($"@SP");
+                _file.WriteLine($"M=M-1");
+                _file.WriteLine($"A=M");
             }
         }
     }

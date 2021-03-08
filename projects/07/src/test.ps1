@@ -13,3 +13,15 @@ Out_As_UTF8 $asm ..\StackArithmetic\SimpleAdd\SimpleAdd.asm
 $asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend.csproj ..\StackArithmetic\StackTest\StackTest.vm)
 Out_As_UTF8 $asm ..\StackArithmetic\StackTest\StackTest.asm
 ..\..\..\tools\CPUEmulator.bat ..\StackArithmetic\StackTest\StackTest.tst
+
+$asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend.csproj ..\MemoryAccess\BasicTest\BasicTest.vm)
+Out_As_UTF8 $asm ..\MemoryAccess\BasicTest\BasicTest.asm
+..\..\..\tools\CPUEmulator.bat ..\MemoryAccess\BasicTest\BasicTest.tst
+
+$asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend.csproj ..\MemoryAccess\PointerTest\PointerTest.vm)
+Out_As_UTF8 $asm ..\MemoryAccess\PointerTest\PointerTest.asm
+..\..\..\tools\CPUEmulator.bat ..\MemoryAccess\PointerTest\PointerTest.tst
+
+$asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend.csproj ..\MemoryAccess\StaticTest\StaticTest.vm)
+Out_As_UTF8 $asm ..\MemoryAccess\StaticTest\StaticTest.asm
+..\..\..\tools\CPUEmulator.bat ..\MemoryAccess\StaticTest\StaticTest.tst

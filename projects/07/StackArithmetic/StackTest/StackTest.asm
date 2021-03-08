@@ -1,4 +1,4 @@
-// Push 17
+// Push constant 17
 @17
 D=A
 @SP
@@ -6,7 +6,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 17
+// Push constant 17
 @17
 D=A
 @SP
@@ -14,34 +14,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
-D=D-M
-@SP
-M=M-1
-// Push a == b
-@EQ0
+A=M
+D=M-D
+@LABEL0
 D;JEQ
-@SP
-A=M
-M=0
-@EQ_END0
+D=0
+@LABEL1
 0;JMP
-(EQ0)
+(LABEL0)
+D=-1
+(LABEL1)
 @SP
 A=M
-M=-1
-(EQ_END0)
+M=D
 @SP
 M=M+1
-// Push 17
+// Push constant 17
 @17
 D=A
 @SP
@@ -49,7 +43,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 16
+// Push constant 16
 @16
 D=A
 @SP
@@ -57,34 +51,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
-D=D-M
-@SP
-M=M-1
-// Push a == b
-@EQ1
+A=M
+D=M-D
+@LABEL2
 D;JEQ
-@SP
-A=M
-M=0
-@EQ_END1
+D=0
+@LABEL3
 0;JMP
-(EQ1)
+(LABEL2)
+D=-1
+(LABEL3)
 @SP
 A=M
-M=-1
-(EQ_END1)
+M=D
 @SP
 M=M+1
-// Push 16
+// Push constant 16
 @16
 D=A
 @SP
@@ -92,7 +80,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 17
+// Push constant 17
 @17
 D=A
 @SP
@@ -100,34 +88,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
-D=D-M
-@SP
-M=M-1
-// Push a == b
-@EQ2
+A=M
+D=M-D
+@LABEL4
 D;JEQ
-@SP
-A=M
-M=0
-@EQ_END2
+D=0
+@LABEL5
 0;JMP
-(EQ2)
+(LABEL4)
+D=-1
+(LABEL5)
 @SP
 A=M
-M=-1
-(EQ_END2)
+M=D
 @SP
 M=M+1
-// Push 892
+// Push constant 892
 @892
 D=A
 @SP
@@ -135,7 +117,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 891
+// Push constant 891
 @891
 D=A
 @SP
@@ -143,34 +125,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push a < b
-@LT3
+@LABEL6
 D;JLT
-@SP
-A=M
-M=0
-@LT_END3
+D=0
+@LABEL7
 0;JMP
-(LT3)
+(LABEL6)
+D=-1
+(LABEL7)
 @SP
 A=M
-M=-1
-(LT_END3)
+M=D
 @SP
 M=M+1
-// Push 891
+// Push constant 891
 @891
 D=A
 @SP
@@ -178,7 +154,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 892
+// Push constant 892
 @892
 D=A
 @SP
@@ -186,34 +162,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push a < b
-@LT4
+@LABEL8
 D;JLT
-@SP
-A=M
-M=0
-@LT_END4
+D=0
+@LABEL9
 0;JMP
-(LT4)
+(LABEL8)
+D=-1
+(LABEL9)
 @SP
 A=M
-M=-1
-(LT_END4)
+M=D
 @SP
 M=M+1
-// Push 891
+// Push constant 891
 @891
 D=A
 @SP
@@ -221,7 +191,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 891
+// Push constant 891
 @891
 D=A
 @SP
@@ -229,34 +199,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push a < b
-@LT5
+@LABEL10
 D;JLT
-@SP
-A=M
-M=0
-@LT_END5
+D=0
+@LABEL11
 0;JMP
-(LT5)
+(LABEL10)
+D=-1
+(LABEL11)
 @SP
 A=M
-M=-1
-(LT_END5)
+M=D
 @SP
 M=M+1
-// Push 32767
+// Push constant 32767
 @32767
 D=A
 @SP
@@ -264,7 +228,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 32766
+// Push constant 32766
 @32766
 D=A
 @SP
@@ -272,34 +236,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push b > a
-@GT6
+@LABEL12
 D;JGT
-@SP
-A=M
-M=0
-@GT_END6
+D=0
+@LABEL13
 0;JMP
-(GT6)
+(LABEL12)
+D=-1
+(LABEL13)
 @SP
 A=M
-M=-1
-(GT_END6)
+M=D
 @SP
 M=M+1
-// Push 32766
+// Push constant 32766
 @32766
 D=A
 @SP
@@ -307,7 +265,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 32767
+// Push constant 32767
 @32767
 D=A
 @SP
@@ -315,34 +273,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push b > a
-@GT7
+@LABEL14
 D;JGT
-@SP
-A=M
-M=0
-@GT_END7
+D=0
+@LABEL15
 0;JMP
-(GT7)
+(LABEL14)
+D=-1
+(LABEL15)
 @SP
 A=M
-M=-1
-(GT_END7)
+M=D
 @SP
 M=M+1
-// Push 32766
+// Push constant 32766
 @32766
 D=A
 @SP
@@ -350,7 +302,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 32766
+// Push constant 32766
 @32766
 D=A
 @SP
@@ -358,34 +310,28 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
-@SP
-M=M-1
-// Push b > a
-@GT8
+@LABEL16
 D;JGT
-@SP
-A=M
-M=0
-@GT_END8
+D=0
+@LABEL17
 0;JMP
-(GT8)
+(LABEL16)
+D=-1
+(LABEL17)
 @SP
 A=M
-M=-1
-(GT_END8)
+M=D
 @SP
 M=M+1
-// Push 57
+// Push constant 57
 @57
 D=A
 @SP
@@ -393,7 +339,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 31
+// Push constant 31
 @31
 D=A
 @SP
@@ -401,7 +347,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push 53
+// Push constant 53
 @53
 D=A
 @SP
@@ -409,24 +355,20 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
+A=M
+D=M+D
 @SP
-A=M-1
-D=D+M
-@SP
-M=M-1
-// Push a+b
 A=M
 M=D
 @SP
 M=M+1
-// Push 112
+// Push constant 112
 @112
 D=A
 @SP
@@ -434,53 +376,36 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
+A=M
 D=M-D
 @SP
-M=M-1
-// Push a+b
 A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
 A=M-1
-D=-M
+M=-M
 @SP
 M=M-1
-// Push -a
-@SP
 A=M
-M=D
-@SP
-M=M+1
-// POP left
-@SP
-A=M-1
 D=M
 @SP
 M=M-1
-// POP right
+A=M
+D=M&D
 @SP
-A=M-1
-D=D&M
-@SP
-M=M-1
-// Push a & b
 A=M
 M=D
 @SP
 M=M+1
-// Push 82
+// Push constant 82
 @82
 D=A
 @SP
@@ -488,32 +413,19 @@ A=M
 M=D
 @SP
 M=M+1
-// POP left
 @SP
-A=M-1
+M=M-1
+A=M
 D=M
 @SP
 M=M-1
-// POP right
-@SP
-A=M-1
-D=D|M
-@SP
-M=M-1
-// Push a | b
 A=M
-M=D
-@SP
-M=M+1
-// POP left
-@SP
-A=M-1
-D=!M
-@SP
-M=M-1
-// Push !a
+D=M|D
 @SP
 A=M
 M=D
 @SP
 M=M+1
+@SP
+A=M-1
+M=!M
