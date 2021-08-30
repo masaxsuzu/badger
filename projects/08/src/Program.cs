@@ -69,6 +69,18 @@ namespace Netsoft.Badger.Compiler.Backend2
                         return new AddCommand();
                     case "sub":
                         return new SubCommand();
+                    case "label":
+                        return new LabelCommand(c[1]);
+                    case "goto":
+                        return new GotoCommand(c[1]);
+                    case "if-goto":
+                        return new IfGotoCommand(c[1]);
+                    case "function":
+                        return new FunctionCommand(c[1], int.Parse(c[2]));
+                    case "call":
+                        return new CallCommand(c[1], int.Parse(c[2]));
+                    case "return":
+                        return new ReturnCommand();
                     default:
                         throw new Exception($"Unknown command {c}");
                 }
@@ -205,6 +217,69 @@ namespace Netsoft.Badger.Compiler.Backend2
             public void Generate(StackMachine machine)
             {
                 machine.Sub(this);
+            }
+        }
+        public class LabelCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public LabelCommand(string arg1) { Arg1 = arg1; }
+            public void Generate(StackMachine machine)
+            {
+                machine.ToLabel(this);
+            }
+        }
+        public class GotoCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public GotoCommand(string arg1) { Arg1 = arg1; }
+            public void Generate(StackMachine machine)
+            {
+                machine.Goto(this);
+            }
+        }
+        public class IfGotoCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public IfGotoCommand(string arg1) { Arg1 = arg1; }
+            public void Generate(StackMachine machine)
+            {
+                machine.IfGoto(this);
+            }
+        }
+        public class FunctionCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public int Arg2 { get; set; }
+            public FunctionCommand(string arg1, int arg2)
+            {
+                Arg1 = arg1;
+                Arg2 = arg2;
+            }
+            public void Generate(StackMachine machine)
+            {
+                machine.Function(this);
+            }
+        }
+        public class CallCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public int Arg2 { get; set; }
+            public CallCommand(string arg1, int arg2)
+            {
+                Arg1 = arg1;
+                Arg2 = arg2;
+            }
+            public void Generate(StackMachine machine)
+            {
+                machine.Call(this);
+            }
+        }
+        public class ReturnCommand : ICommand
+        {
+            public ReturnCommand() { }
+            public void Generate(StackMachine machine)
+            {
+                machine.Return(this);
             }
         }
 
@@ -377,6 +452,18 @@ namespace Netsoft.Badger.Compiler.Backend2
                 Debugger.WriteLine($"\"{command.Arg1}\"");
             }
 
+            public void ToLabel(LabelCommand command) {
+            }
+            public void Goto(GotoCommand command) {
+            }
+            public void IfGoto(IfGotoCommand command) {
+            }
+            public void Function(FunctionCommand command) {
+            }
+            public void Call(CallCommand command) {
+            }
+            public void Return(ReturnCommand command) {
+            }
             private void Compare(string cond, int l1, int l2)
             {
                 this.PopToARegister();
