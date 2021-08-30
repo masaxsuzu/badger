@@ -7,7 +7,8 @@ namespace Netsoft.Badger.Compiler.Backend2
     {
         static int Main(string[] args)
         {
-            if (args.Length < 1) {
+            if (args.Length < 1)
+            {
                 Console.Error.WriteLine("No source code is provided!");
                 return 1;
             }
@@ -22,24 +23,28 @@ namespace Netsoft.Badger.Compiler.Backend2
             return 0;
         }
 
-        static ICommand ParseCommand(string line) {
+        static ICommand ParseCommand(string line)
+        {
             var chars = line.ToCharArray();
             int i = 0;
             while (i < chars.Length)
             {
-                if (Char.IsWhiteSpace(chars[i])) {
+                if (Char.IsWhiteSpace(chars[i]))
+                {
                     i++;
                     continue;
                 }
                 // comment
-                if (chars[i] == '/') {
-                     if (chars[i+1] == '/') {
-                            return new Comment(line);
-                     }
-                    throw new Exception($"got {chars[i+1]}, want /");
+                if (chars[i] == '/')
+                {
+                    if (chars[i + 1] == '/')
+                    {
+                        return new Comment(line);
+                    }
+                    throw new Exception($"got {chars[i + 1]}, want /");
                 }
 
-                string[] c = line.Split(' ',StringSplitOptions.RemoveEmptyEntries);
+                string[] c = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 switch (c[0])
                 {
                     case "eq":
@@ -71,168 +76,214 @@ namespace Netsoft.Badger.Compiler.Backend2
             return new NewLine(line);
         }
 
-        interface ICommand {
+        interface ICommand
+        {
             void Generate(StackMachine machine);
         }
 
-        public class NewLine: ICommand {
-            public NewLine(string line){
+        public class NewLine : ICommand
+        {
+            public NewLine(string line)
+            {
             }
-            public  void Generate(StackMachine machine) {
+            public void Generate(StackMachine machine)
+            {
 
             }
         }
-        public class Comment: ICommand {
-            public string Line{get;set;}
-            public Comment(string line){
+        public class Comment : ICommand
+        {
+            public string Line { get; set; }
+            public Comment(string line)
+            {
                 Line = line;
             }
-            public  void Generate(StackMachine machine) {
-                
+            public void Generate(StackMachine machine)
+            {
+
             }
         }
 
-        public class EqualCommand: ICommand {
-            public EqualCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class EqualCommand : ICommand
+        {
+            public EqualCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Eq(this);
             }
         }
 
-        public class LessThanCommand: ICommand {
-            public LessThanCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class LessThanCommand : ICommand
+        {
+            public LessThanCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Lt(this);
             }
         }
-        public class GreaterThanCommand: ICommand {
-            public GreaterThanCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class GreaterThanCommand : ICommand
+        {
+            public GreaterThanCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Gt(this);
             }
         }
-        public class NegativeCommand: ICommand {
-            public NegativeCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class NegativeCommand : ICommand
+        {
+            public NegativeCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Neg(this);
             }
         }
-        public class NotCommand: ICommand {
-            public NotCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class NotCommand : ICommand
+        {
+            public NotCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Not(this);
             }
         }
 
-        public class AndCommand: ICommand {
-            public AndCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class AndCommand : ICommand
+        {
+            public AndCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.And(this);
             }
         }
-         public class OrCommand: ICommand {
-            public OrCommand(){}
-            public  void Generate(StackMachine machine) {
+        public class OrCommand : ICommand
+        {
+            public OrCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Or(this);
             }
         }
 
-        public class PushCommand: ICommand{
-            public string Arg1 {get; set;}
-            public int Arg2 {get; set;}
-            public PushCommand(string arg1, int arg2) {
+        public class PushCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public int Arg2 { get; set; }
+            public PushCommand(string arg1, int arg2)
+            {
                 Arg1 = arg1;
                 Arg2 = arg2;
             }
-            public  void Generate(StackMachine machine) {
-                machine.Push(this);                
+            public void Generate(StackMachine machine)
+            {
+                machine.Push(this);
             }
         }
-        public class PopCommand: ICommand {
-            public string Arg1 {get; set;}
-            public int Arg2 {get; set;}
-            public PopCommand(string arg1, int arg2) {
+        public class PopCommand : ICommand
+        {
+            public string Arg1 { get; set; }
+            public int Arg2 { get; set; }
+            public PopCommand(string arg1, int arg2)
+            {
                 Arg1 = arg1;
                 Arg2 = arg2;
             }
-            public  void Generate(StackMachine machine) {
+            public void Generate(StackMachine machine)
+            {
                 machine.Pop(this);
             }
         }
-        public class AddCommand: ICommand {
-            public AddCommand() {}
-            public  void Generate(StackMachine machine) {
+        public class AddCommand : ICommand
+        {
+            public AddCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Add(this);
             }
         }
-        public class SubCommand: ICommand {
-            public SubCommand() {}
-            public  void Generate(StackMachine machine) {
+        public class SubCommand : ICommand
+        {
+            public SubCommand() { }
+            public void Generate(StackMachine machine)
+            {
                 machine.Sub(this);
             }
         }
 
-        public class StackMachine {
+        public class StackMachine
+        {
             private string _name;
             private System.IO.TextWriter _file;
-            public int RegisterId{ get; set;}
-            public int SP{ get; set;}
-            public int Label{ get; set;}
-            public StackMachine(string name, System.IO.TextWriter file) {
+            public int RegisterId { get; set; }
+            public int SP { get; set; }
+            public int Label { get; set; }
+            public StackMachine(string name, System.IO.TextWriter file)
+            {
                 RegisterId = 0;
                 Label = 0;
                 _file = file;
                 _name = name;
             }
-            public void Eq(EqualCommand command) {
+            public void Eq(EqualCommand command)
+            {
                 var l1 = Label++;
                 var l2 = Label++;
                 Compare("JEQ", l1, l2);
             }
-            public void Lt(LessThanCommand command) {
+            public void Lt(LessThanCommand command)
+            {
                 var l1 = Label++;
                 var l2 = Label++;
                 Compare("JLT", l1, l2);
             }
-            public void Gt(GreaterThanCommand command) {
+            public void Gt(GreaterThanCommand command)
+            {
                 var l1 = Label++;
                 var l2 = Label++;
                 Compare("JGT", l1, l2);
             }
-            public void Neg(NegativeCommand command) {
+            public void Neg(NegativeCommand command)
+            {
                 Unary("M=-M");
             }
-            public void Not(NotCommand command) {
-                 Unary("M=!M");
+            public void Not(NotCommand command)
+            {
+                Unary("M=!M");
             }
-            public void Add(AddCommand command) {
+            public void Add(AddCommand command)
+            {
                 Binary("D=M+D");
             }
-            public void Sub(SubCommand command) {
+            public void Sub(SubCommand command)
+            {
                 Binary("D=M-D");
             }
-            public void And(AndCommand command) {
-                 Binary("D=M&D");
+            public void And(AndCommand command)
+            {
+                Binary("D=M&D");
             }
-            public void Or(OrCommand command) {
+            public void Or(OrCommand command)
+            {
                 Binary("D=M|D");
             }
-            public void Push(PushCommand command) {
-                if(command.Arg1 == "constant") {
+            public void Push(PushCommand command)
+            {
+                if (command.Arg1 == "constant")
+                {
                     _file.WriteLine($"// Push constant {command.Arg2}");
                     _file.WriteLine($"@{command.Arg2}");
                     _file.WriteLine($"D=A");
                     this.PushFromDRegister();
                     return;
                 }
-                var segment = command.Arg1 switch {
+                var segment = command.Arg1 switch
+                {
                     "local" => "LCL",
                     "argument" => "ARG",
                     "this" => "THIS",
                     "that" => "THAT",
                     _ => ""
                 };
-                if (!string.IsNullOrEmpty(segment)) {
+                if (!string.IsNullOrEmpty(segment))
+                {
                     _file.WriteLine($"// Push argument {command.Arg2}");
 
                     _file.WriteLine($"@{segment}");
@@ -245,12 +296,14 @@ namespace Netsoft.Badger.Compiler.Backend2
                     this.PushFromDRegister();
                     return;
                 }
-                var baseAddress = command.Arg1 switch {
+                var baseAddress = command.Arg1 switch
+                {
                     "temp" => "5",
                     "pointer" => "3",
                     _ => ""
                 };
-                if (!string.IsNullOrEmpty(baseAddress)) {
+                if (!string.IsNullOrEmpty(baseAddress))
+                {
                     _file.WriteLine($"@{baseAddress}");
                     for (int i = 0; i < command.Arg2; i++)
                     {
@@ -260,24 +313,28 @@ namespace Netsoft.Badger.Compiler.Backend2
                     this.PushFromDRegister();
                     return;
                 }
-                if (command.Arg1 == "static") {
+                if (command.Arg1 == "static")
+                {
                     _file.WriteLine($"@{_name}.{command.Arg2}");
                     _file.WriteLine($"D=M");
                     this.PushFromDRegister();
                     return;
                 }
             }
-            public void Pop(PopCommand command) {
+            public void Pop(PopCommand command)
+            {
                 _file.WriteLine($"// Pop {command.Arg1} {command.Arg2}");
 
-                var segment = command.Arg1 switch {
+                var segment = command.Arg1 switch
+                {
                     "local" => "LCL",
                     "argument" => "ARG",
                     "this" => "THIS",
                     "that" => "THAT",
                     _ => ""
                 };
-                if (!string.IsNullOrEmpty(segment)) {
+                if (!string.IsNullOrEmpty(segment))
+                {
                     this.PopToARegister();
                     _file.WriteLine("D=M");
                     _file.WriteLine($"@{segment}");
@@ -290,12 +347,14 @@ namespace Netsoft.Badger.Compiler.Backend2
                     return;
                 }
 
-                var baseAddress = command.Arg1 switch {
+                var baseAddress = command.Arg1 switch
+                {
                     "temp" => "5",
                     "pointer" => "3",
                     _ => ""
                 };
-                if (!string.IsNullOrEmpty(baseAddress)) {
+                if (!string.IsNullOrEmpty(baseAddress))
+                {
                     this.PopToARegister();
                     _file.WriteLine($"D=M");
                     _file.WriteLine($"@{baseAddress}");
@@ -307,7 +366,8 @@ namespace Netsoft.Badger.Compiler.Backend2
                     return;
                 }
 
-                if (command.Arg1 == "static") {
+                if (command.Arg1 == "static")
+                {
                     this.PopToARegister();
                     _file.WriteLine($"D=M");
                     _file.WriteLine($"@{_name}.{command.Arg2}");
@@ -317,7 +377,8 @@ namespace Netsoft.Badger.Compiler.Backend2
                 Debugger.WriteLine($"\"{command.Arg1}\"");
             }
 
-            private void Compare(string cond, int l1, int l2) {
+            private void Compare(string cond, int l1, int l2)
+            {
                 this.PopToARegister();
                 _file.WriteLine($"D=M");
                 this.PopToARegister();
@@ -332,27 +393,31 @@ namespace Netsoft.Badger.Compiler.Backend2
                 _file.WriteLine($"(LABEL{l2})");
                 this.PushFromDRegister();
             }
-            
-            private void Unary(string op) {
+
+            private void Unary(string op)
+            {
                 _file.WriteLine("@SP");
                 _file.WriteLine("A=M-1");
                 _file.WriteLine($"{op}");
             }
-            private void Binary(string op) {
+            private void Binary(string op)
+            {
                 this.PopToARegister();
                 _file.WriteLine("D=M");
                 this.PopToARegister();
                 _file.WriteLine($"{op}");
                 this.PushFromDRegister();
             }
-            private void PushFromDRegister() {
+            private void PushFromDRegister()
+            {
                 _file.WriteLine($"@SP");
                 _file.WriteLine($"A=M");
                 _file.WriteLine($"M=D");
                 _file.WriteLine($"@SP");
                 _file.WriteLine($"M=M+1");
             }
-            private void PopToARegister() {
+            private void PopToARegister()
+            {
                 _file.WriteLine($"@SP");
                 _file.WriteLine($"M=M-1");
                 _file.WriteLine($"A=M");
@@ -360,8 +425,10 @@ namespace Netsoft.Badger.Compiler.Backend2
         }
     }
 
-    class Debugger {
-        public static void WriteLine(string any) {
+    class Debugger
+    {
+        public static void WriteLine(string any)
+        {
             Console.Error.WriteLine($"Debug:{any}");
         }
     }

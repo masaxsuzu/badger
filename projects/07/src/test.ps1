@@ -5,6 +5,7 @@ function Out_As_UTF8 {
     $UTF8woBOM = New-Object "System.Text.UTF8Encoding" -ArgumentList @($false)
     [System.IO.File]::WriteAllLines((Join-Path $PWD $path), @($content), $UTF8woBOM)
 }
+dotnet format
 
 $asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend.csproj ..\StackArithmetic\SimpleAdd\SimpleAdd.vm)
 Out_As_UTF8 $asm ..\StackArithmetic\SimpleAdd\SimpleAdd.asm
