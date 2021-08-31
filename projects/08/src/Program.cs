@@ -453,10 +453,19 @@ namespace Netsoft.Badger.Compiler.Backend2
             }
 
             public void ToLabel(LabelCommand command) {
+                _file.WriteLine($"// Label argument {command.Arg1}");
+
+                _file.WriteLine($"({command.Arg1})");
             }
             public void Goto(GotoCommand command) {
             }
             public void IfGoto(IfGotoCommand command) {
+                _file.WriteLine($"// If-Goto argument {command.Arg1}");
+                PopToARegister();
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@{command.Arg1}");
+                _file.WriteLine($"D;JNE");
+
             }
             public void Function(FunctionCommand command) {
             }
