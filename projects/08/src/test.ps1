@@ -6,6 +6,10 @@ function Out_As_UTF8 {
     [System.IO.File]::WriteAllLines((Join-Path $PWD $path), @($content), $UTF8woBOM)
 }
 
+$asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend2.csproj ..\ProgramFlow\FibonacciSeries\FibonacciSeries.vm)
+Out_As_UTF8 $asm ..\ProgramFlow\FibonacciSeries\FibonacciSeries.asm
+..\..\..\tools\CPUEmulator.bat ..\ProgramFlow\FibonacciSeries\FibonacciSeries.tst
+
 $asm = $(dotnet run --project .\Netsoft.Badger.Compiler.Backend2.csproj ..\ProgramFlow\BasicLoop\BasicLoop.vm)
 Out_As_UTF8 $asm ..\ProgramFlow\BasicLoop\BasicLoop.asm
 ..\..\..\tools\CPUEmulator.bat ..\ProgramFlow\BasicLoop\BasicLoop.tst

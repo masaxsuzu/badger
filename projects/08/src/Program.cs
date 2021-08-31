@@ -458,6 +458,9 @@ namespace Netsoft.Badger.Compiler.Backend2
                 _file.WriteLine($"({command.Arg1})");
             }
             public void Goto(GotoCommand command) {
+                _file.WriteLine($"// Goto argument {command.Arg1}");
+                _file.WriteLine($"@{command.Arg1}");
+                _file.WriteLine($"0;JMP");
             }
             public void IfGoto(IfGotoCommand command) {
                 _file.WriteLine($"// If-Goto argument {command.Arg1}");
