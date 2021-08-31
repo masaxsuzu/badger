@@ -471,10 +471,55 @@ namespace Netsoft.Badger.Compiler.Backend2
 
             }
             public void Function(FunctionCommand command) {
+                _file.WriteLine($"// Function {command.Arg1} ({command.Arg2})");
+                _file.WriteLine($"({command.Arg1})");
+                _file.WriteLine($"D=0");
+                for (int i = 0; i < command.Arg2; i++)
+                {
+                    this.PushFromDRegister();
+                }
             }
             public void Call(CallCommand command) {
             }
             public void Return(ReturnCommand command) {
+                _file.WriteLine($"// Return");
+                _file.WriteLine($"@LCL");
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@R13");
+                _file.WriteLine($"M=D");
+                _file.WriteLine($"@5");
+                _file.WriteLine($"D=A");
+                _file.WriteLine($"@R13");
+                _file.WriteLine($"A=M-D");
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@R14");
+                _file.WriteLine($"M=D");
+
+                this.PopToARegister();
+
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@ARG");
+                _file.WriteLine($"A=M");
+                _file.WriteLine($"M=D");
+
+                _file.WriteLine($"@ARG");
+                _file.WriteLine($"D=M+1");
+                _file.WriteLine($"@SP");
+                _file.WriteLine($"M=D");
+
+                foreach (var segmentName in new string[] { "THAT", "THIS", "ARG", "LCL" })
+                {
+                    _file.WriteLine($"@R13");
+                    _file.WriteLine($"AM=M-1");
+                    _file.WriteLine($"D=M");
+                    _file.WriteLine($"@{segmentName}");
+                    _file.WriteLine($"M=D");                    
+                }
+
+                _file.WriteLine($"@R14");
+                _file.WriteLine($"A=M");
+                _file.WriteLine($"0;JMP");
+
             }
             private void Compare(string cond, int l1, int l2)
             {
