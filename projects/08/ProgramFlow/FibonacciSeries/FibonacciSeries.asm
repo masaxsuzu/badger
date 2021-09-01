@@ -1,4 +1,3 @@
-// File FibonacciSeries.vm
 // Push argument 1
 @ARG
 A=M

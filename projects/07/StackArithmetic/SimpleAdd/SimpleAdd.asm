@@ -1,4 +1,3 @@
-// File SimpleAdd.vm
 // Push constant 7
 @7
 D=A

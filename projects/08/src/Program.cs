@@ -13,25 +13,31 @@ namespace Netsoft.Badger.Compiler.Backend2
             }
             if (System.IO.Directory.Exists(args[0]))
             {
-                foreach (var file in System.IO.Directory.GetFiles(args[0], "*.vm"))
-                {
-                    Generate(file);
-                }
+                Generate(System.IO.Directory.GetFiles(args[0], "*.vm"));
             }
-            else {
-                Generate(args[0]);
+            else
+            {
+                Generate(new string[] { args[0]} );
             }
             return 0;
         }
 
-        static void Generate(string filePath) {
-            var name = System.IO.Path.GetFileNameWithoutExtension(filePath);
-            var lines = System.IO.File.ReadAllLines(filePath);
-            var sm = new StackMachine(name, Console.Out);
-            foreach (var line in lines)
+        static void Generate(string[] filePaths) {
+            var sm = new StackMachine(
+                Console.Out, 
+                filePaths
+                    .Select(f => System.IO.Path.GetFileNameWithoutExtension(f))
+                    .Where(n => n == "Sys")
+                    .Count() > 0);
+            foreach (var filePath in filePaths)
             {
-                var command = ParseCommand(line);
-                command.Generate(sm);
+                var name = System.IO.Path.GetFileNameWithoutExtension(filePath);
+                var lines = System.IO.File.ReadAllLines(filePath);
+                foreach (var line in lines)
+                {
+                    var command = ParseCommand(line);
+                    command.Generate(sm);
+                }
             }
         }
 
@@ -302,14 +308,31 @@ namespace Netsoft.Badger.Compiler.Backend2
             public int RegisterId { get; set; }
             public int SP { get; set; }
             public int Label { get; set; }
-            public StackMachine(string name, System.IO.TextWriter file)
+            public int ReturnAddressLabel { get; set; }
+            public StackMachine(System.IO.TextWriter file, bool includeSystem)
             {
                 RegisterId = 0;
                 Label = 0;
+                ReturnAddressLabel = 0;
                 _file = file;
+                if(includeSystem)
+                {
+                    Init();
+                }
+            }
+
+            public void Init()
+            {
+                _file.WriteLine("@256");
+                _file.WriteLine("D=A");
+                _file.WriteLine("@SP");
+                _file.WriteLine("M=D");
+                this.Call(new CallCommand("Sys.init", 0));
+            }
+
+            public void SetName(string name){
                 _name = name;
                 _file.WriteLine($"// File {_name}.vm");
-
             }
             public void Eq(EqualCommand command)
             {
@@ -494,6 +517,37 @@ namespace Netsoft.Badger.Compiler.Backend2
                 }
             }
             public void Call(CallCommand command) {
+                _file.WriteLine($"// Call {command.Arg1} ({command.Arg2})");
+
+                _file.WriteLine($"@Return{this.ReturnAddressLabel}");
+                _file.WriteLine($"D=A");
+                this.PushFromDRegister();
+
+                foreach (var segmentName in new string[] { "LCL", "ARG", "THIS", "THAT" })
+                {
+                    _file.WriteLine($"@{segmentName}");
+                    _file.WriteLine($"D=M");
+                    this.PushFromDRegister();
+                }
+
+                _file.WriteLine($"@SP");
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@{command.Arg2}");
+                _file.WriteLine($"D=D-A");
+                _file.WriteLine($"@5");
+                _file.WriteLine($"D=D-A");
+                _file.WriteLine($"@ARG");
+                _file.WriteLine($"M=D");
+                _file.WriteLine($"@SP");
+                _file.WriteLine($"D=M");
+                _file.WriteLine($"@LCL");
+                _file.WriteLine($"M=D");
+                _file.WriteLine($"@{command.Arg1}");
+                _file.WriteLine($"0;JMP");
+                _file.WriteLine($"(Return{this.ReturnAddressLabel})");
+
+                this.ReturnAddressLabel++;
+
             }
             public void Return(ReturnCommand command) {
                 _file.WriteLine($"// Return");

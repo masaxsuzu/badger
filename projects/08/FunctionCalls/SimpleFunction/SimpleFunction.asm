@@ -1,4 +1,3 @@
-// File SimpleFunction.vm
 // Function SimpleFunction.test (2)
 (SimpleFunction.test)
 D=0
