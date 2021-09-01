@@ -7,20 +7,32 @@ namespace Netsoft.Badger.Compiler.Backend2
     {
         static int Main(string[] args)
         {
-            if (args.Length < 1)
-            {
+            if (args.Length < 1) {
                 Console.Error.WriteLine("No source code is provided!");
                 return 1;
             }
-            var name = System.IO.Path.GetFileNameWithoutExtension(args[0]);
-            var lines = System.IO.File.ReadAllLines(args[0]);
+            if (System.IO.Directory.Exists(args[0]))
+            {
+                foreach (var file in System.IO.Directory.GetFiles(args[0], "*.vm"))
+                {
+                    Generate(file);
+                }
+            }
+            else {
+                Generate(args[0]);
+            }
+            return 0;
+        }
+
+        static void Generate(string filePath) {
+            var name = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            var lines = System.IO.File.ReadAllLines(filePath);
             var sm = new StackMachine(name, Console.Out);
             foreach (var line in lines)
             {
                 var command = ParseCommand(line);
                 command.Generate(sm);
             }
-            return 0;
         }
 
         static ICommand ParseCommand(string line)
@@ -296,6 +308,8 @@ namespace Netsoft.Badger.Compiler.Backend2
                 Label = 0;
                 _file = file;
                 _name = name;
+                _file.WriteLine($"// File {_name}.vm");
+
             }
             public void Eq(EqualCommand command)
             {

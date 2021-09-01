@@ -1,3 +1,4 @@
+// File StaticTest.vm
 // Push constant 111
 @111
 D=A
