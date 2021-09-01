@@ -1,3 +1,4 @@
+// File BasicLoop.vm
 // Push constant 0
 @0
 D=A
@@ -25,7 +26,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 0
+// Push local 0
 @LCL
 A=M
 D=M
@@ -109,7 +110,7 @@ A=M
 D=M
 @LOOP_START
 D;JNE
-// Push argument 0
+// Push local 0
 @LCL
 A=M
 D=M

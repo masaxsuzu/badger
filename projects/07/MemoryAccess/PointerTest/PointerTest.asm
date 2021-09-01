@@ -1,3 +1,4 @@
+// File PointerTest.vm
 // Push constant 3030
 @3030
 D=A
@@ -69,6 +70,7 @@ A=A+1
 A=A+1
 A=A+1
 M=D
+// Push pointer 0
 @3
 D=M
 @SP
@@ -76,6 +78,7 @@ A=M
 M=D
 @SP
 M=M+1
+// Push pointer 1
 @3
 A=A+1
 D=M
@@ -97,7 +100,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 2
+// Push this 2
 @THIS
 A=M
 A=A+1
@@ -121,7 +124,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 6
+// Push that 6
 @THAT
 A=M
 A=A+1

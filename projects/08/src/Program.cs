@@ -31,7 +31,7 @@ namespace Netsoft.Badger.Compiler.Backend2
                     .Count() > 0);
             foreach (var filePath in filePaths)
             {
-                var name = System.IO.Path.GetFileNameWithoutExtension(filePath);
+                sm.SetName(System.IO.Path.GetFileNameWithoutExtension(filePath));
                 var lines = System.IO.File.ReadAllLines(filePath);
                 foreach (var line in lines)
                 {
@@ -378,9 +378,10 @@ namespace Netsoft.Badger.Compiler.Backend2
             }
             public void Push(PushCommand command)
             {
+                _file.WriteLine($"// Push {command.Arg1} {command.Arg2}");
+
                 if (command.Arg1 == "constant")
                 {
-                    _file.WriteLine($"// Push constant {command.Arg2}");
                     _file.WriteLine($"@{command.Arg2}");
                     _file.WriteLine($"D=A");
                     this.PushFromDRegister();
@@ -396,7 +397,6 @@ namespace Netsoft.Badger.Compiler.Backend2
                 };
                 if (!string.IsNullOrEmpty(segment))
                 {
-                    _file.WriteLine($"// Push argument {command.Arg2}");
 
                     _file.WriteLine($"@{segment}");
                     _file.WriteLine($"A=M");

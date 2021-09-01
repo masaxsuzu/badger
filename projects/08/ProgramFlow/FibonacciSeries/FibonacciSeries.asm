@@ -1,3 +1,4 @@
+// File FibonacciSeries.vm
 // Push argument 1
 @ARG
 A=M
@@ -110,7 +111,7 @@ D;JNE
 0;JMP
 // Label argument COMPUTE_ELEMENT
 (COMPUTE_ELEMENT)
-// Push argument 0
+// Push that 0
 @THAT
 A=M
 D=M
@@ -119,7 +120,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 1
+// Push that 1
 @THAT
 A=M
 A=A+1
@@ -152,6 +153,7 @@ A=M
 A=A+1
 A=A+1
 M=D
+// Push pointer 1
 @3
 A=A+1
 D=M

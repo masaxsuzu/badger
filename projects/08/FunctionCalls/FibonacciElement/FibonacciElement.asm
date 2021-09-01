@@ -53,6 +53,7 @@ M=D
 @Sys.init
 0;JMP
 (Return0)
+// File Main.vm
 // Function Main.fibonacci (0)
 (Main.fibonacci)
 D=0
@@ -384,6 +385,7 @@ M=D
 @R14
 A=M
 0;JMP
+// File Sys.vm
 // Function Sys.init (0)
 (Sys.init)
 D=0

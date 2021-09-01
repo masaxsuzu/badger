@@ -1,3 +1,4 @@
+// File SimpleFunction.vm
 // Function SimpleFunction.test (2)
 (SimpleFunction.test)
 D=0
@@ -11,7 +12,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 0
+// Push local 0
 @LCL
 A=M
 D=M
@@ -20,7 +21,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 1
+// Push local 1
 @LCL
 A=M
 A=A+1

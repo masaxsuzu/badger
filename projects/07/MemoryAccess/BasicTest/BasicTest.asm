@@ -1,3 +1,4 @@
+// File BasicTest.vm
 // Push constant 10
 @10
 D=A
@@ -131,7 +132,7 @@ A=A+1
 A=A+1
 A=A+1
 M=D
-// Push argument 0
+// Push local 0
 @LCL
 A=M
 D=M
@@ -140,7 +141,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 5
+// Push that 5
 @THAT
 A=M
 A=A+1
@@ -190,7 +191,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 6
+// Push this 6
 @THIS
 A=M
 A=A+1
@@ -205,7 +206,7 @@ A=M
 M=D
 @SP
 M=M+1
-// Push argument 6
+// Push this 6
 @THIS
 A=M
 A=A+1
@@ -246,6 +247,7 @@ A=M
 M=D
 @SP
 M=M+1
+// Push temp 6
 @5
 A=A+1
 A=A+1
